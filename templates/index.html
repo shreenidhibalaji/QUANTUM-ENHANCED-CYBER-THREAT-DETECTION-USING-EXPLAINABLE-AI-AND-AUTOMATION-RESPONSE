@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section" style="text-align: center; padding: 4rem 0; position: relative;">
+    <!-- Background Image -->
+    <div class="hero-bg" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(15, 15, 35, 0.8), rgba(10, 10, 26, 0.9)), 
+                    url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3') center/cover;
+        z-index: -1;
+        border-radius: 20px;
+    "></div>
+    
+    <div class="hero-content animate__animated animate__fadeInUp">
+        <h1 style="font-size: 3.5rem; font-weight: bold; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <i class="fas fa-brain" style="color: var(--primary-color);"></i>
+            Advanced AI Security Platform
+        </h1>
+        
+        <p style="font-size: 1.3rem; margin-bottom: 2rem; color: var(--text-light); max-width: 600px; margin-left: auto; margin-right: auto;">
+            Harness the power of Quantum Neural Networks to detect cyber threats with 97% accuracy. 
+            Real-time monitoring, instant alerts, and comprehensive threat analysis.
+        </p>
+        
+        <div class="hero-stats" style="display: flex; justify-content: center; gap: 3rem; margin: 3rem 0; flex-wrap: wrap;">
+            <div class="stat-card card" style="min-width: 150px;">
+                <div style="font-size: 2.5rem; color: var(--success-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">97%</div>
+                <div style="color: var(--text-light);">Accuracy</div>
+            </div>
+            
+            <div class="stat-card card" style="min-width: 150px;">
+                <div style="font-size: 2.5rem; color: var(--warning-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">Real-time</div>
+                <div style="color: var(--text-light);">Detection</div>
+            </div>
+            
+            <div class="stat-card card" style="min-width: 150px;">
+                <div style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-shield-virus"></i>
+                </div>
+                <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);">Multi-layer</div>
+                <div style="color: var(--text-light);">Protection</div>
+            </div>
+        </div>
+        
+        <div class="hero-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('signup') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                <i class="fas fa-rocket"></i>
+                Get Started Free
+            </a>
+            <a href="#features" class="btn btn-secondary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                <i class="fas fa-info-circle"></i>
+                Learn More
+            </a>
+        </div>
+    </div>
+</div>
+
+<section id="features" style="padding: 4rem 0;">
+    <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: var(--primary-color);">
+        <i class="fas fa-cogs"></i>
+        Advanced Features
+    </h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div class="feature-card card animate__animated animate__fadeInLeft">
+            <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Quantum Neural Networks</h3>
+            <p style="color: var(--text-light);">
+                State-of-the-art QNN technology for superior threat detection and minimal false positives.
+            </p>
+        </div>
+        
+        <div class="feature-card card animate__animated animate__fadeInUp">
+            <div style="font-size: 3rem; color: var(--success-color); margin-bottom: 1rem;">
+                <i class="fas fa-bell"></i>
+            </div>
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Smart Alerts</h3>
+            <p style="color: var(--text-light);">
+                Instant notifications via email and voice calls when threats exceed 10% probability.
+            </p>
+        </div>
+        
+        <div class="feature-card card animate__animated animate__fadeInRight">
+            <div style="font-size: 3rem; color: var(--warning-color); margin-bottom: 1rem;">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Real-time Analytics</h3>
+            <p style="color: var(--text-light);">
+                Comprehensive dashboards with detailed threat analysis and historical data.
+            </p>
+        </div>
+        
+        <!-- <div class="feature-card card animate__animated animate__fadeInLeft">
+            <div style="font-size: 3rem; color: var(--accent-color); margin-bottom: 1rem;">
+                <i class="fas fa-file-upload"></i>
+            </div>
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Multiple Formats</h3>
+            <p style="color: var(--text-light);">
+                Support for CSV (PCAP files in csv format with automatic preprocessing and analysis.)
+            </p>
+        </div> -->
+        
+        <!-- <div class="feature-card card animate__animated animate__fadeInUp">
+            <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Secure Platform</h3>
+            <p style="color: var(--text-light);">
+                Enterprise-grade security with encrypted data processing and secure user authentication.
+            </p>
+        </div>
+        
+        <div class="feature-card card animate__animated animate__fadeInRight">
+            <div style="font-size: 3rem; color: var(--success-color); margin-bottom: 1rem;">
+                <i class="fas fa-cloud"></i>
+            </div>
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">Cloud Ready</h3>
+            <p style="color: var(--text-light);">
+                Scalable cloud infrastructure with high availability and automatic backups.
+            </p>
+        </div>
+    </div> -->
+</section>
+{% endblock %}

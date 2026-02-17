@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="profile-header" style="text-align: center; margin-bottom: 3rem;">
+        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">User Profile</h1>
+        <p style="color: var(--text-light);">Manage your account settings and security preferences</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+        <!-- Profile Information Card -->
+        <div class="card animate__animated animate__fadeInLeft">
+            <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+                <i class="fas fa-user-circle" style="font-size: 2rem; color: var(--primary-color); margin-right: 1rem;"></i>
+                <h2 style="color: var(--text-primary); margin: 0;">Profile Information</h2>
+            </div>
+            
+            <div class="profile-info">
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                        <i class="fas fa-user" style="color: var(--primary-color); width: 20px; margin-right: 0.5rem;"></i>
+                        <label style="color: var(--text-light); font-weight: 500;">Username</label>
+                    </div>
+                    <div style="background: var(--glass-bg); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <span style="color: var(--text-primary); font-weight: 600;">{{ user[0] }}</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                        <i class="fas fa-envelope" style="color: var(--success-color); width: 20px; margin-right: 0.5rem;"></i>
+                        <label style="color: var(--text-light); font-weight: 500;">Email Address</label>
+                    </div>
+                    <div style="background: var(--glass-bg); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <span style="color: var(--text-primary);">{{ user[1] }}</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                        <i class="fas fa-phone" style="color: var(--warning-color); width: 20px; margin-right: 0.5rem;"></i>
+                        <label style="color: var(--text-light); font-weight: 500;">Phone Number</label>
+                    </div>
+                    <div style="background: var(--glass-bg); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <span style="color: var(--text-primary);">{{ user[2] if user[2] else 'Not provided' }}</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                        <i class="fas fa-calendar-alt" style="color: var(--accent-color); width: 20px; margin-right: 0.5rem;"></i>
+                        <label style="color: var(--text-light); font-weight: 500;">Member Since</label>
+                    </div>
+                    <div style="background: var(--glass-bg); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <span style="color: var(--text-primary);">{{ user[3][:10] if user[3] else 'Unknown' }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="editProfile()">
+                <i class="fas fa-edit"></i>
+                Edit Profile
+            </button> -->
+        </div>
+
+        <!-- Security Settings Card -->
+        <div class="card animate__animated animate__fadeInRight">
+            <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--success-color); margin-right: 1rem;"></i>
+                <h2 style="color: var(--text-primary); margin: 0;">Security Settings</h2>
+            </div>
+            
+            <div class="security-options">
+                <div class="security-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--glass-bg); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.25rem;">
+                            <i class="fas fa-bell" style="color: var(--warning-color); margin-right: 0.5rem;"></i>
+                            Email Alerts
+                        </div>
+                        <div style="color: var(--text-light); font-size: 0.9rem;">Receive email notifications for threats</div>
+                    </div>
+                    <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                        <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
+                        <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--success-color); transition: .4s; border-radius: 34px;"></span>
+                    </label>
+                </div>
+                
+                <!-- <div class="security-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--glass-bg); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.25rem;">
+                            <i class="fas fa-sms" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            SMS Alerts
+                        </div>
+                        <div style="color: var(--text-light); font-size: 0.9rem;">Receive SMS notifications for high-risk threats</div>
+                    </div>
+                    <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                        <input type="checkbox" {{ 'checked' if user[2] else '' }} style="opacity: 0; width: 0; height: 0;">
+                        <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: {{ 'var(--success-color)' if user[2] else 'var(--border-color)' }}; transition: .4s; border-radius: 34px;"></span>
+                    </label>
+                </div> -->
+                
+                <div class="security-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--glass-bg); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
+                    <div>
+                        <div style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.25rem;">
+                            <i class="fas fa-phone" style="color: var(--accent-color); margin-right: 0.5rem;"></i>
+                            Voice Calls
+                        </div>
+                        <div style="color: var(--text-light); font-size: 0.9rem;">Receive voice calls for critical threats</div>
+                    </div>
+                    <label class="toggle-switch" style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                        <input type="checkbox" {{ 'checked' if user[2] else '' }} style="opacity: 0; width: 0; height: 0;">
+                        <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: {{ 'var(--success-color)' if user[2] else 'var(--border-color)' }}; transition: .4s; border-radius: 34px;"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="changePassword()">
+                <i class="fas fa-key"></i>
+                Change Password
+            </button> -->
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="card animate__animated animate__fadeInUp">
+        <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+            <i class="fas fa-chart-bar" style="font-size: 2rem; color: var(--primary-color); margin-right: 1rem;"></i>
+            <h2 style="color: var(--text-primary); margin: 0;">Account Activity</h2>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+            <div class="stat-card" style="background: var(--glass-bg); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid var(--glass-border);">
+                <div style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-file-upload"></i>
+                </div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--text-primary); margin-bottom: 0.25rem;">12</div>
+                <div style="color: var(--text-light); font-size: 0.9rem;">Files Analyzed</div>
+            </div>
+            
+            <div class="stat-card" style="background: var(--glass-bg); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid var(--glass-border);">
+                <div style="font-size: 2rem; color: var(--warning-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--text-primary); margin-bottom: 0.25rem;">3</div>
+                <div style="color: var(--text-light); font-size: 0.9rem;">Alerts Triggered</div>
+            </div>
+            
+            <div class="stat-card" style="background: var(--glass-bg); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid var(--glass-border);">
+                <div style="font-size: 2rem; color: var(--success-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--text-primary); margin-bottom: 0.25rem;">24/7</div>
+                <div style="color: var(--text-light); font-size: 0.9rem;">Protection Active</div>
+            </div>
+            
+            <div class="stat-card" style="background: var(--glass-bg); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid var(--glass-border);">
+                <div style="font-size: 2rem; color: var(--accent-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--text-primary); margin-bottom: 0.25rem;">2.3s</div>
+                <div style="color: var(--text-light); font-size: 0.9rem;">Avg Response Time</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 3rem; flex-wrap: wrap;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+            <i class="fas fa-tachometer-alt"></i>
+            Back to Dashboard
+        </a>
+        <a href="{{ url_for('analyze') }}" class="btn btn-secondary">
+            <i class="fas fa-upload"></i>
+            New Analysis
+        </a>
+        <button class="btn btn-danger" onclick="confirmLogout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+    </div>
+</div>
+
+<script>
+function editProfile() {
+    alert('Profile editing feature coming soon! Contact administrator to update your information.');
+}
+
+function changePassword() {
+    alert('Password change feature coming soon! Contact administrator for password reset.');
+}
+
+function confirmLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        window.location.href = "{{ url_for('logout') }}";
+    }
+}
+
+// Toggle switch animations
+document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+    toggle.addEventListener('change', function() {
+        const slider = this.nextElementSibling;
+        if (this.checked) {
+            slider.style.backgroundColor = 'var(--success-color)';
+        } else {
+            slider.style.backgroundColor = 'var(--border-color)';
+        }
+    });
+});
+</script>
+
+<style>
+.toggle-switch .slider::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .slider::before {
+    transform: translateX(26px);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .profile-header {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}

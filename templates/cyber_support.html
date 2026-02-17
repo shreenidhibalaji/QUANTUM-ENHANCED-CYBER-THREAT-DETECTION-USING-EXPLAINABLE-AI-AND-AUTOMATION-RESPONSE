@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="max-width:600px; margin:auto; padding:2rem;">
+
+    <h2 style="color:#dc3545; margin-bottom:1rem;">
+        🔎 Find Nearby Cyber Security Experts
+    </h2>
+
+    <p style="color:var(--text-light); margin-bottom:2rem;">
+        Enter your security issue and we’ll find nearby incident response firms or SOC analysts.
+    </p>
+
+    <form method="POST">
+
+        <div style="margin-bottom:1.5rem;">
+            <label style="font-weight:bold;">Describe Your Security Issue:</label>
+            <input type="text" 
+                   name="problem" 
+                   required
+                   placeholder="e.g ransomware attack, data breach, phishing"
+                   style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+        </div>
+
+        <!-- Hidden location fields -->
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+
+        <button type="submit"
+                style="background:#dc3545; color:white; padding:12px 20px; 
+                       border:none; border-radius:6px; font-weight:bold; cursor:pointer;">
+            🔎 Find Nearby Experts
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+/* Auto-capture user location */
+navigator.geolocation.getCurrentPosition(function(position) {
+    document.getElementById("latitude").value = position.coords.latitude;
+    document.getElementById("longitude").value = position.coords.longitude;
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,415 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+    <!-- Header -->
+    <div class="results-header" style="text-align: center; margin-bottom: 3rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">
+            {% if result.attack_percentage > result.attack_threshold %}
+                <i class="fas fa-exclamation-triangle" style="color: var(--error-color); animation: flash 1s infinite;"></i>
+            {% elif result.attack_percentage > 20 %}
+                <i class="fas fa-shield-alt" style="color: var(--warning-color);"></i>
+            {% else %}
+                <i class="fas fa-shield-check" style="color: var(--success-color);"></i>
+            {% endif %}
+        </div>
+        <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">Analysis Complete</h1>
+        <p style="color: var(--text-light);">QNN Analysis ID: {{ result.analysis_id }}</p>
+        <p style="color: var(--text-light); font-size: 0.9rem;">{{ result.timestamp }}</p>
+    </div>
+
+    <!-- Main Results -->
+    <div class="results-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+        <div class="result-card card" style="text-align: center;">
+            <div style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h3 style="color: var(--text-primary); font-size: 2rem; margin-bottom: 0.5rem;">{{ "{:,}".format(result.total_records) }}</h3>
+            <p style="color: var(--text-light);">Total Records</p>
+        </div>
+        
+        <div class="result-card card" style="text-align: center;">
+            <div style="font-size: 3rem; color: var(--error-color); margin-bottom: 1rem;">
+                <i class="fas fa-virus"></i>
+            </div>
+            <h3 style="color: var(--text-primary); font-size: 2rem; margin-bottom: 0.5rem;">{{ "{:,}".format(result.attack_records) }}</h3>
+            <p style="color: var(--text-light);">Attack Records</p>
+        </div>
+        
+        <div class="result-card card" style="text-align: center;">
+            <div style="font-size: 3rem; color: var(--success-color); margin-bottom: 1rem;">
+                <i class="fas fa-shield-check"></i>
+            </div>
+            <h3 style="color: var(--text-primary); font-size: 2rem; margin-bottom: 0.5rem;">{{ "{:,}".format(result.normal_records) }}</h3>
+            <p style="color: var(--text-light);">Normal Records</p>
+        </div>
+        
+        <div class="result-card card" style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                {% if result.attack_percentage > result.attack_threshold %}
+                    <i class="fas fa-exclamation-triangle" style="color: var(--error-color);"></i>
+                {% elif result.attack_percentage > 20 %}
+                    <i class="fas fa-exclamation" style="color: var(--warning-color);"></i>
+                {% else %}
+                    <i class="fas fa-check-circle" style="color: var(--success-color);"></i>
+                {% endif %}
+            </div>
+            <h3 style="color: {% if result.attack_percentage > result.attack_threshold %}var(--error-color){% elif result.attack_percentage > 20 %}var(--warning-color){% else %}var(--success-color){% endif %}; font-size: 2rem; margin-bottom: 0.5rem;">
+                {{ "%.1f"|format(result.attack_percentage) }}%
+            </h3>
+            <p style="color: var(--text-light);">Attack Percentage</p>
+        </div>
+    </div>
+
+    <!-- Alert Banner -->
+    {% if result.attack_percentage > result.attack_threshold %}
+    <div class="alert-banner card" style="background: linear-gradient(135deg, rgba(255, 51, 102, 0.2), rgba(255, 107, 53, 0.2)); border: 2px solid var(--error-color); margin-bottom: 3rem; animation: slideInDown 0.5s ease;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--error-color); animation: pulse 2s infinite;"></i>
+            <div>
+                <h3 style="color: var(--error-color); margin-bottom: 0.5rem;">HIGH RISK DETECTED!</h3>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">
+                    Attack percentage ({{ "%.1f"|format(result.attack_percentage) }}%) exceeds threshold ({{ result.attack_threshold }}%). Immediate action recommended!
+                </p>
+                {% if result.alert_sent %}
+                <p style="color: var(--success-color);">
+                    <i class="fas fa-check-circle"></i>
+                    Alerts have been sent via email and voice call.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Detailed Analysis Section -->
+    <div class="detailed-analysis" style="margin-bottom: 3rem;">
+        <div class="card">
+            <h3 style="color: var(--text-primary); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-chart-bar"></i>
+                Detailed Analysis
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- Overall Prediction -->
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Overall Assessment</h4>
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="font-size: 2rem;">
+                            {% if result.overall_prediction == 'attack' %}
+                                <i class="fas fa-exclamation-triangle" style="color: var(--error-color);"></i>
+                            {% else %}
+                                <i class="fas fa-shield-check" style="color: var(--success-color);"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <p style="font-size: 1.5rem; font-weight: bold; color: {% if result.overall_prediction == 'attack' %}var(--error-color){% else %}var(--success-color){% endif %}; margin: 0;">
+                                {{ result.overall_prediction.upper() }}
+                            </p>
+                            <p style="color: var(--text-light); margin: 0;">Network Status</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attack Probability Stats -->
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Probability Statistics</h4>
+                    <div style="margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-light);">Average:</span>
+                        <span style="color: var(--text-primary); font-weight: bold;">{{ "%.3f"|format(result.avg_attack_probability) }}</span>
+                    </div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-light);">Maximum:</span>
+                        <span style="color: var(--text-primary); font-weight: bold;">{{ "%.3f"|format(result.max_attack_probability) }}</span>
+                    </div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-light);">Minimum:</span>
+                        <span style="color: var(--text-primary); font-weight: bold;">{{ "%.3f"|format(result.min_attack_probability) }}</span>
+                    </div>
+                </div>
+
+                <!-- Alert Status -->
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Alert Status</h4>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2rem;">
+                            {% if result.alert_sent %}
+                                <i class="fas fa-bell" style="color: var(--warning-color); animation: ring 2s infinite;"></i>
+                            {% else %}
+                                <i class="fas fa-bell-slash" style="color: var(--text-light);"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <p style="color: var(--text-primary); font-weight: bold; margin: 0;">
+                                {{ "ALERTS SENT" if result.alert_sent else "NO ALERTS" }}
+                            </p>
+                            <p style="color: var(--text-light); margin: 0; font-size: 0.9rem;">
+                                {% if result.alert_sent %}
+                                    Email & Voice alerts dispatched
+                                {% else %}
+                                    Attack rate below threshold
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SHAP Analysis -->
+                {% if result.shap_analysis %}
+                <div>
+                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">SHAP Analysis</h4>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2rem;">
+                            <i class="fas fa-brain" style="color: var(--primary-color);"></i>
+                        </div>
+                        <div>
+                            <p style="color: var(--text-primary); font-weight: bold; margin: 0;">AVAILABLE</p>
+                            <p style="color: var(--text-light); margin: 0; font-size: 0.9rem;">
+                                AI explainability analysis completed
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- SHAP Analysis Section -->
+    {% if result.shap_analysis %}
+    <div class="shap-section" style="margin-bottom: 3rem;">
+        <div class="card">
+            <h3 style="color: var(--text-primary); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-brain"></i>
+                SHAP Explainability Analysis
+            </h3>
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <p style="color: var(--text-light); margin-bottom: 1rem;">
+                    Understanding what features contributed most to the attack detection decisions
+                </p>
+                {% set shap_plots = result.shap_plots %}
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;">
+                    {% if shap_plots.waterfall %}
+                    <div>
+                        <h5 style="color: var(--text-primary);">SHAP Waterfall Plot (Single Row)</h5>
+                        <img src="/{{ shap_plots.waterfall }}" alt="SHAP Waterfall Plot" style="max-width: 600px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 1rem; background: #111;" />
+                    </div>
+                    {% endif %}
+                </div>
+                {% if not shap_plots.waterfall %}
+                <div style="color: var(--error-color); margin-top: 1rem;">SHAP plots could not be generated for this analysis.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Progress Bar for Attack Percentage -->
+    <div class="progress-section" style="margin-bottom: 3rem;">
+        <div class="card">
+            <h3 style="color: var(--text-primary); margin-bottom: 2rem;">Attack Percentage Breakdown</h3>
+            
+            <div style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-light);">Attack Traffic</span>
+                    <span style="color: var(--error-color); font-weight: bold;">{{ "%.1f"|format(result.attack_percentage) }}%</span>
+                </div>
+                <div style="background: var(--bg-secondary); border-radius: 10px; overflow: hidden; height: 20px;">
+                    <div style="background: linear-gradient(90deg, var(--error-color), #ff6b6b); height: 100%; width: {{ result.attack_percentage }}%; transition: width 1s ease;"></div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-light);">Normal Traffic</span>
+                    <span style="color: var(--success-color); font-weight: bold;">{{ "%.1f"|format(result.normal_percentage) }}%</span>
+                </div>
+                <div style="background: var(--bg-secondary); border-radius: 10px; overflow: hidden; height: 20px;">
+                    <div style="background: linear-gradient(90deg, var(--success-color), #51cf66); height: 100%; width: {{ result.normal_percentage }}%; transition: width 1s ease;"></div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                <p style="color: var(--text-light); margin: 0;">
+                    <strong>Threshold:</strong> {{ result.attack_threshold }}% | 
+                    <strong>Current:</strong> {{ "%.1f"|format(result.attack_percentage) }}% |
+                    <strong>Status:</strong> 
+                    <span style="color: {% if result.attack_percentage > result.attack_threshold %}var(--error-color){% else %}var(--success-color){% endif %};">
+                        {% if result.attack_percentage > result.attack_threshold %}ABOVE THRESHOLD{% else %}WITHIN NORMAL RANGE{% endif %}
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section" style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 3rem; flex-wrap: wrap;">
+        <a href="{{ url_for('analyze') }}" class="btn btn-primary">
+            <i class="fas fa-upload"></i>
+            Analyze Another File
+        </a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-tachometer-alt"></i>
+            Back to Dashboard
+        </a>
+       
+       
+        <button onclick="downloadResults()" class="btn btn-secondary">
+            <i class="fas fa-download"></i>
+            Download Report
+        </button>
+        <button onclick="shareResults()" class="btn btn-secondary">
+            <i class="fas fa-share"></i>
+            Share Results
+        </button>
+    </div>
+</div>
+
+<script>
+function downloadResults() {
+    const results = {
+        analysis_id: "{{ result.analysis_id }}",
+        total_records: {{ result.total_records }},
+        attack_records: {{ result.attack_records }},
+        normal_records: {{ result.normal_records }},
+        attack_percentage: {{ result.attack_percentage }},
+        normal_percentage: {{ result.normal_percentage }},
+        overall_prediction: "{{ result.overall_prediction }}",
+        attack_threshold: {{ result.attack_threshold }},
+        alert_sent: {{ result.alert_sent|lower }},
+        shap_analysis: {{ result.shap_analysis|lower }},
+        probability_stats: {
+            average: {{ result.avg_attack_probability }},
+            maximum: {{ result.max_attack_probability }},
+            minimum: {{ result.min_attack_probability }}
+        },
+        timestamp: "{{ result.timestamp }}"
+    };
+    
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "analysis_results_{{ result.analysis_id }}.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    
+    // Show success message
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check"></i> Downloaded!';
+    btn.style.background = 'var(--success-color)';
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+    }, 2000);
+}
+
+function shareResults() {
+    const text = `🛡️ CyberGuard AI Analysis Results
+
+📊 Total Records: {{ "{:,}".format(result.total_records) }}
+🦠 Attack Records: {{ "{:,}".format(result.attack_records) }}
+✅ Normal Records: {{ "{:,}".format(result.normal_records) }}
+⚠️ Attack Percentage: {{ "%.1f"|format(result.attack_percentage) }}%
+🎯 Overall Status: {{ result.overall_prediction.upper() }}
+🚨 Alert Status: {{ "SENT" if result.alert_sent else "NONE" }}
+🧠 SHAP Analysis: {{ "AVAILABLE" if result.shap_analysis else "N/A" }}
+
+Analyzed on: {{ result.timestamp }}`;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'CyberGuard AI Analysis Results',
+            text: text
+        });
+    } else {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Results copied to clipboard!');
+        });
+    }
+}
+
+// Animate progress bars on load
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('[style*="width:"]');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 500);
+    });
+});
+</script>
+
+<style>
+@keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes ring {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-15deg); }
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.result-card {
+    transition: all 0.3s ease;
+}
+
+.result-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.progress-section .card {
+    background: linear-gradient(135deg, var(--bg-surface), var(--bg-secondary));
+}
+
+@media (max-width: 768px) {
+    .actions-section {
+        flex-direction: column !important;
+        align-items: center;
+    }
+    
+    .results-summary {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .detailed-analysis > div {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Loading animation for progress bars */
+.progress-bar {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+</style>
+{% endblock %}

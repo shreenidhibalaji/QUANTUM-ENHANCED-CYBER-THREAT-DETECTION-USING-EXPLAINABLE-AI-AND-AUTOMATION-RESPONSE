@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <!-- Header Section -->
+    <div class="analyze-header" style="text-align: center; margin-bottom: 3rem;">
+        <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem; animation: pulse 2s infinite;">
+            <i class="fas fa-microscope"></i>
+        </div>
+        <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">Network Traffic Analysis</h1>
+        <p style="color: var(--text-light); font-size: 1.1rem;">Upload your network traffic files for AI-powered threat detection with 97% accuracy</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+        <!-- Upload Section -->
+        <div class="upload-section card animate__animated animate__fadeInLeft">
+            <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary-color); margin-right: 1rem;"></i>
+                <h2 style="color: var(--text-primary); margin: 0;">Upload File</h2>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                <div class="file-upload-area" style="
+                    border: 2px dashed var(--border-color); 
+                    border-radius: 12px; 
+                    padding: 3rem 2rem; 
+                    text-align: center; 
+                    background: var(--glass-bg); 
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    margin-bottom: 2rem;
+                " onclick="document.getElementById('file').click()">
+                    <div style="font-size: 3rem; color: var(--text-light); margin-bottom: 1rem;">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <p style="color: var(--text-primary); font-size: 1.1rem; margin-bottom: 0.5rem;">
+                        Click to upload or drag and drop
+                    </p>
+                    <p style="color: var(--text-light); font-size: 0.9rem;">
+                        Supported: PCAP file in csv format
+                    </p>
+                    <input type="file" id="file" name="file" accept=".csv" style="display: none;" required>
+                </div>
+                
+                <div id="file-info" style="display: none; background: var(--glass-bg); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--success-color);">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <i class="fas fa-file-check" style="color: var(--success-color); font-size: 1.5rem;"></i>
+                        <div>
+                            <div id="file-name" style="color: var(--text-primary); font-weight: 600;"></div>
+                            <div id="file-size" style="color: var(--text-light); font-size: 0.9rem;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem; font-size: 1.1rem;" id="analyzeBtn" disabled>
+                    <i class="fas fa-brain"></i>
+                    Analyze with QNN
+                </button>
+            </form>
+        </div>
+
+        <!-- Information Section -->
+        <div class="info-section animate__animated animate__fadeInRight">
+            <div class="card" style="margin-bottom: 2rem;">
+                <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                    <i class="fas fa-info-circle" style="font-size: 2rem; color: var(--warning-color); margin-right: 1rem;"></i>
+                    <h3 style="color: var(--text-primary); margin: 0;">How It Works</h3>
+                </div>
+                
+                <div class="process-steps">
+                    <div class="step" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="background: var(--primary-color); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem; flex-shrink: 0;">1</div>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: 600;">Upload Your File</div>
+                            <div style="color: var(--text-light); font-size: 0.9rem;">Support for CSV network traffic files</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="background: var(--success-color); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem; flex-shrink: 0;">2</div>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: 600;">AI Processing</div>
+                            <div style="color: var(--text-light); font-size: 0.9rem;">Quantum Neural Network analyzes traffic patterns</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step" style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                        <div style="background: var(--warning-color); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem; flex-shrink: 0;">3</div>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: 600;">Threat Detection</div>
+                            <div style="color: var(--text-light); font-size: 0.9rem;">97% accuracy in identifying malicious activities</div>
+                        </div>
+                    </div>
+                    
+                    <div class="step" style="display: flex; align-items: center;">
+                        <div style="background: var(--accent-color); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem; flex-shrink: 0;">4</div>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: 600;">Smart Alerts</div>
+                            <div style="color: var(--text-light); font-size: 0.9rem;">Automatic notifications if threats exceed 50%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supported Formats -->
+            <div class="card">
+                <h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">
+                    <i class="fas fa-file-alt" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                    Supported Formats
+                </h3>
+                
+                <div class="format-list">
+                    <div class="format-item" style="display: flex; align-items: center; padding: 1rem; background: var(--glass-bg); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
+                        <i class="fas fa-file-csv" style="font-size: 1.5rem; color: var(--success-color); margin-right: 1rem;"></i>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: 600;">CSV Files</div>
+                            <div style="color: var(--text-light); font-size: 0.9rem;">Comma-separated network logs</div>
+                        </div>
+                    </div>
+                    
+                    <!-- <div class="format-item" style="display: flex; align-items: center; padding: 1rem; background: var(--glass-bg); border-radius: 8px; margin-bottom: 1rem; border: 1px solid var(--glass-border);">
+                        <i class="fas fa-file-alt" style="font-size: 1.5rem; color: var(--primary-color); margin-right: 1rem;"></i>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: 600;">TXT Files</div>
+                            <div style="color: var(--text-light); font-size: 0.9rem;">Plain text network data</div>
+                        </div>
+                    </div> -->
+                    
+                    <!-- <div class="format-item" style="display: flex; align-items: center; padding: 1rem; background: var(--glass-bg); border-radius: 8px; border: 1px solid var(--glass-border);">
+                        <i class="fas fa-network-wired" style="font-size: 1.5rem; color: var(--warning-color); margin-right: 1rem;"></i>
+                        <div>
+                            <div style="color: var(--text-primary); font-weight: 600;">PCAP Files</div>
+                            <div style="color: var(--text-light); font-size: 0.9rem;">Packet capture files</div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// File upload handling
+document.getElementById('file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const uploadArea = document.querySelector('.file-upload-area');
+    
+    if (file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+        fileInfo.style.display = 'block';
+        analyzeBtn.disabled = false;
+        uploadArea.style.borderColor = 'var(--success-color)';
+        uploadArea.style.background = 'rgba(0, 255, 136, 0.1)';
+    }
+});
+
+// Drag and drop functionality
+const uploadArea = document.querySelector('.file-upload-area');
+
+uploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.style.borderColor = 'var(--primary-color)';
+    this.style.background = 'rgba(0, 212, 255, 0.1)';
+});
+
+uploadArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    this.style.borderColor = 'var(--border-color)';
+    this.style.background = 'var(--glass-bg)';
+});
+
+uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        document.getElementById('file').files = files;
+        document.getElementById('file').dispatchEvent(new Event('change'));
+    }
+    this.style.borderColor = 'var(--border-color)';
+    this.style.background = 'var(--glass-bg)';
+});
+
+// Form submission with loading state
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+    analyzeBtn.disabled = true;
+});
+</script>
+
+<style>
+.upload-section:hover .file-upload-area {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.step:hover {
+    transform: translateX(5px);
+    transition: transform 0.3s ease;
+}
+
+.format-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+}
+</style>
+{% endblock %}

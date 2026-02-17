@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="max-width:900px; margin:auto;">
+
+    <h1 style="color: var(--text-primary); margin-bottom:1rem;">
+        📅 Book Legal / SOC Consultation
+    </h1>
+
+    <p style="color: var(--text-light); margin-bottom:2rem;">
+        Need expert assistance for:
+        <br>🚨 Cyber attack investigation
+        <br>⚖️ Legal advisory
+        <br>🔐 SOC escalation
+        <br>🛡️ Incident response
+    </p>
+
+    <!-- Calendly Inline Widget -->
+    <div class="calendly-inline-widget" 
+         data-url="https://calendly.com/shreenidhibalaji2004/30min"
+
+         style="min-width:320px;height:700px;">
+    </div>
+
+    <script type="text/javascript" 
+        src="https://assets.calendly.com/assets/external/widget.js" 
+        async>
+    </script>
+
+    <div style="margin-top:2rem;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

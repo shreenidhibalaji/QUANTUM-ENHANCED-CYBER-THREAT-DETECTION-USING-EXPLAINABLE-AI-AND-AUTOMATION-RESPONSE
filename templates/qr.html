@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Scan to View Dashboard on Mobile</h2>
+
+<p>{{ url }}</p>
+
+<img src="{{ url_for('static', filename=qr_image) }}" width="250">
+
+{% endblock %}

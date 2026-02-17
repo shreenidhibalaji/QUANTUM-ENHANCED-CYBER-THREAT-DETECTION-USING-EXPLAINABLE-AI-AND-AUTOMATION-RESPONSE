@@ -1,0 +1,10 @@
+env/
+uploads/
+*.csv
+*.ipynb
+*.npy
+*.png
+*.pdf
+database/
+results/
+shap_results/

@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="/qr">
+    <button>View Mobile QR</button>
+</a>
+
+<div class="dashboard-header" style="margin-bottom: 3rem;">
+    <h1 style="color: var(--text-primary); margin-bottom: 0.5rem;">
+        <i class="fas fa-tachometer-alt"></i>
+        Security Dashboard
+    </h1>
+    <p style="color: var(--text-light);">
+        Welcome back, {{ session.username }}! Monitor your network security in real-time.
+    </p>
+</div>
+
+<!-- QR Code Section -->
+<div style="margin-bottom: 3rem; text-align: center;">
+    <h4 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+        📱 Scan to Open Dashboard on Mobile
+    </h4>
+    <p style="font-size: 12px; color: var(--text-light);">
+        {{ url }}
+    </p>
+    <img src="{{ url_for('static', filename=qr_image) }}" 
+         width="160"
+         style="border: 2px solid var(--border-color); padding: 8px; border-radius: 8px;">
+</div>
+
+<!-- Statistics Cards -->
+<div class="stats-grid" 
+     style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+
+    <div class="stat-card card">
+        <h3 style="color: var(--primary-color); font-size: 2rem;">{{ stats[0] or 0 }}</h3>
+        <p style="color: var(--text-light);">Total Analyses</p>
+    </div>
+
+    <div class="stat-card card">
+        <h3 style="color: var(--warning-color); font-size: 2rem;">
+            {{ "%.1f"|format(stats[1] or 0) }}%
+        </h3>
+        <p style="color: var(--text-light);">Avg Attack Rate</p>
+    </div>
+
+    <div class="stat-card card">
+        <h3 style="color: var(--error-color); font-size: 2rem;">{{ stats[2] or 0 }}</h3>
+        <p style="color: var(--text-light);">High Risk Alerts</p>
+    </div>
+
+    <div class="stat-card card">
+        <h3 style="color: var(--success-color); font-size: 2rem;">
+            {{ model_accuracy * 100 }}%
+        </h3>
+        <p style="color: var(--text-light);">Model Accuracy</p>
+    </div>
+
+</div>
+<!-- End stats-grid -->
+
+
+<!-- 🚨 SOC Escalation Section -->
+{% if stats[2] and stats[2] > 0 %}
+<div style="text-align:center; margin-bottom: 2rem;">
+
+    <h3 style="color:#dc3545; margin-bottom:1rem;">
+        🚨 High Risk Activity Detected
+    </h3>
+
+    <a href="{{ url_for('payment') }}" 
+       style="background-color:#dc3545; 
+              color:white; 
+              padding:14px 28px; 
+              border-radius:8px; 
+              text-decoration:none; 
+              font-weight:bold;
+              font-size:16px;">
+        🔐 Escalate to SOC (Secure UPI Payment)
+    </a>
+
+</div>
+{% endif %}
+
+
+<!-- 🔴 If Payment Completed → Show Jitsi Button -->
+{% if session.soc_room %}
+<div style="text-align:center; margin-bottom: 3rem;">
+
+    <h3 style="color:#28a745; margin-bottom:1rem;">
+        ✅ Payment Verified — SOC Room Ready
+    </h3>
+
+    <a href="https://meet.jit.si/{{ session.soc_room }}" 
+       target="_blank"
+       style="background-color:#28a745; 
+              color:white; 
+              padding:14px 28px; 
+              border-radius:8px; 
+              text-decoration:none; 
+              font-weight:bold;
+              font-size:16px;">
+        🎥 Join Secure SOC Room
+    </a>
+
+</div>
+{% endif %}
+
+
+<!-- Quick Actions -->
+<div class="quick-actions" style="margin-bottom: 3rem;">
+    <h2 style="color: var(--text-primary); margin-bottom: 1rem;">
+        <i class="fas fa-bolt"></i> Quick Actions
+    </h2>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+
+        <a href="{{ url_for('analyze') }}" class="btn btn-primary">
+            <i class="fas fa-upload"></i> New Analysis
+        </a>
+
+        <a href="{{ url_for('profile') }}" class="btn btn-secondary">
+            <i class="fas fa-user-cog"></i> Settings
+        </a>
+
+        <a href="{{ url_for('cyber_support') }}" class="btn btn-danger">
+            🔎 Find Cyber Experts Nearby
+        </a>
+        <a href="{{ url_for('book_consultation') }}" class="btn btn-danger">
+            📅 Book Legal / SOC Consultation
+        </a>
+
+
+    </div>
+</div>
+
+
+<!-- Recent Analyses -->
+<div class="recent-analyses">
+    <h2 style="color: var(--text-primary); margin-bottom: 1rem;">
+        <i class="fas fa-history"></i> Recent Analyses
+    </h2>
+
+    {% if recent_analyses %}
+    <div class="table-container card" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom:1px solid var(--border-color);">
+                    <th style="padding:1rem;">File</th>
+                    <th style="padding:1rem;">Records</th>
+                    <th style="padding:1rem;">Attack Rate</th>
+                    <th style="padding:1rem;">Alert</th>
+                    <th style="padding:1rem;">Date</th>
+                    <th style="padding:1rem;">Report</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for analysis in recent_analyses %}
+                <tr style="border-bottom:1px solid var(--border-color);">
+
+                    <td style="padding:1rem;">{{ analysis[3] }}</td>
+                    <td style="padding:1rem;">{{ analysis[4] }}</td>
+
+                    <td style="padding:1rem;">
+                        <span style="
+                            color: {% if analysis[6] > 50 %}red
+                                   {% elif analysis[6] > 20 %}orange
+                                   {% else %}green{% endif %};
+                            font-weight: bold;">
+                            {{ "%.1f"|format(analysis[6]) }}%
+                        </span>
+                    </td>
+
+                    <td style="padding:1rem;">
+                        {% if analysis[8] %}
+                            <span style="color:red;">Sent</span>
+                        {% else %}
+                            <span style="color:gray;">None</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="padding:1rem;">{{ analysis[9] }}</td>
+
+                    <td style="padding:1rem;">
+                        <a href="{{ url_for('download_report', analysis_id=analysis[0]) }}"
+                           style="color:blue; font-weight:bold;">
+                            📄 Download
+                        </a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

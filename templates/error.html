@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+
+{% block title %}Error {{ error_code }} - CyberGuard AI{% endblock %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center;">
+    <div class="error-container animate__animated animate__fadeInUp" style="max-width: 600px;">
+        <!-- Error Icon -->
+        <div class="error-icon" style="font-size: 8rem; margin-bottom: 2rem; position: relative;">
+            {% if error_code == 404 %}
+                <i class="fas fa-search" style="color: var(--primary-color);"></i>
+                <i class="fas fa-exclamation-triangle" style="position: absolute; top: -10px; right: 20px; font-size: 3rem; color: var(--warning-color); animation: pulse 2s infinite;"></i>
+            {% elif error_code == 500 %}
+                <i class="fas fa-server" style="color: var(--error-color);"></i>
+                <i class="fas fa-bolt" style="position: absolute; top: 10px; right: 30px; font-size: 3rem; color: var(--warning-color); animation: flash 1.5s infinite;"></i>
+            {% else %}
+                <i class="fas fa-exclamation-circle" style="color: var(--error-color);"></i>
+            {% endif %}
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-content">
+            <h1 style="font-size: 4rem; font-weight: bold; color: var(--error-color); margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 51, 102, 0.3);">
+                {{ error_code }}
+            </h1>
+            
+            <h2 style="font-size: 2rem; color: var(--text-primary); margin-bottom: 1.5rem;">
+                {% if error_code == 404 %}
+                    <i class="fas fa-ghost"></i>
+                    Page Not Found
+                {% elif error_code == 500 %}
+                    <i class="fas fa-cogs"></i>
+                    Internal Server Error
+                {% else %}
+                    System Error
+                {% endif %}
+            </h2>
+            
+            <div class="error-description card" style="background: var(--glass-bg); padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--glass-border);">
+                <p style="font-size: 1.2rem; color: var(--text-light); line-height: 1.6; margin-bottom: 1rem;">
+                    {% if error_code == 404 %}
+                        🔍 <strong>Security Scan Complete:</strong> The requested resource was not found in our secure database. 
+                        The page you're looking for might have been moved, deleted, or never existed.
+                    {% elif error_code == 500 %}
+                        ⚙️ <strong>System Alert:</strong> Our security systems encountered an internal error while processing your request. 
+                        Our technical team has been automatically notified and is investigating the issue.
+                    {% else %}
+                        🚨 <strong>Security Notice:</strong> {{ error_message or "An unexpected error occurred while processing your request." }}
+                    {% endif %}
+                </p>
+                
+                <div style="background: rgba(255, 170, 0, 0.1); border: 1px solid var(--warning-color); border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+                    <i class="fas fa-info-circle" style="color: var(--warning-color); margin-right: 0.5rem;"></i>
+                    <strong style="color: var(--warning-color);">What can you do?</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem; color: var(--text-light);">
+                        {% if error_code == 404 %}
+                            <li>Check the URL for typos</li>
+                            <li>Use the navigation menu to find what you need</li>
+                            <li>Return to the dashboard and try again</li>
+                        {% elif error_code == 500 %}
+                            <li>Try refreshing the page</li>
+                            <li>Clear your browser cache</li>
+                            <li>Contact support if the problem persists</li>
+                        {% else %}
+                            <li>Try refreshing the page</li>
+                            <li>Go back to the previous page</li>
+                            <li>Contact support if you need assistance</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="error-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+            <button onclick="history.back()" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Go Back
+            </button>
+            
+            {% if session.user_id %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+            {% else %}
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+            {% endif %}
+            
+            <button onclick="location.reload()" class="btn btn-secondary">
+                <i class="fas fa-redo"></i>
+                Refresh
+            </button>
+        </div>
+
+        <!-- System Status -->
+        <div class="system-status card" style="background: var(--glass-bg); padding: 1.5rem; border: 1px solid var(--glass-border);">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">
+                <i class="fas fa-heartbeat" style="color: var(--success-color);"></i>
+                System Status
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                <div class="status-item" style="text-align: center;">
+                    <div style="font-size: 1.5rem; color: var(--success-color); margin-bottom: 0.5rem;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div style="color: var(--text-light); font-size: 0.9rem;">API Status</div>
+                    <div style="color: var(--success-color); font-weight: bold;">Online</div>
+                </div>
+                
+                <div class="status-item" style="text-align: center;">
+                    <div style="font-size: 1.5rem; color: var(--success-color); margin-bottom: 0.5rem;">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div style="color: var(--text-light); font-size: 0.9rem;">Security</div>
+                    <div style="color: var(--success-color); font-weight: bold;">Active</div>
+                </div>
+                
+                <div class="status-item" style="text-align: center;">
+                    <div style="font-size: 1.5rem; color: var(--success-color); margin-bottom: 0.5rem;">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div style="color: var(--text-light); font-size: 0.9rem;">Database</div>
+                    <div style="color: var(--success-color); font-weight: bold;">Connected</div>
+                </div>
+                
+                <div class="status-item" style="text-align: center;">
+                    <div style="font-size: 1.5rem; color: {{ 'var(--success-color)' if error_code != 500 else 'var(--warning-color)' }}; margin-bottom: 0.5rem;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div style="color: var(--text-light); font-size: 0.9rem;">AI Models</div>
+                    <div style="color: {{ 'var(--success-color)' if error_code != 500 else 'var(--warning-color)' }}; font-weight: bold;">
+                        {{ 'Operational' if error_code != 500 else 'Checking...' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+            <p style="color: var(--text-light); margin-bottom: 1rem;">
+                <i class="fas fa-life-ring" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                Need help? Our support team is here to assist you.
+            </p>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="mailto:support@cyberguard.ai" class="btn btn-secondary" style="font-size: 0.9rem;">
+                    <i class="fas fa-envelope"></i>
+                    Email Support
+                </a>
+                
+                <button onclick="openChat()" class="btn btn-secondary" style="font-size: 0.9rem;">
+                    <i class="fas fa-comments"></i>
+                    Live Chat
+                </button>
+                
+                <a href="#" class="btn btn-secondary" style="font-size: 0.9rem;">
+                    <i class="fas fa-book"></i>
+                    Documentation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openChat() {
+    alert('Live chat feature coming soon! Please use email support for immediate assistance.');
+}
+
+// Add some interactive effects
+document.addEventListener('DOMContentLoaded', function() {
+    // Add glitch effect for 500 errors
+    {% if error_code == 500 %}
+    const errorCode = document.querySelector('h1');
+    setInterval(() => {
+        errorCode.style.textShadow = Math.random() > 0.5 ? 
+            '2px 0 #ff3366, -2px 0 #00d4ff' : 
+            '0 0 20px rgba(255, 51, 102, 0.3)';
+    }, 200);
+    {% endif %}
+    
+    // Auto-refresh for 500 errors after 30 seconds
+    {% if error_code == 500 %}
+    let countdown = 30;
+    const refreshBtn = document.querySelector('button[onclick="location.reload()"]');
+    const originalText = refreshBtn.innerHTML;
+    
+    const timer = setInterval(() => {
+        countdown--;
+        refreshBtn.innerHTML = `<i class="fas fa-redo"></i> Auto-refresh in ${countdown}s`;
+        
+        if (countdown <= 0) {
+            clearInterval(timer);
+            location.reload();
+        }
+    }, 1000);
+    
+    // Clear timer if user manually refreshes
+    refreshBtn.addEventListener('click', () => {
+        clearInterval(timer);
+    });
+    {% endif %}
+});
+</script>
+
+<style>
+@keyframes flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+.error-container:hover .error-icon i {
+    animation: pulse 1s infinite;
+}
+
+.status-item:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .error-icon {
+        font-size: 6rem !important;
+    }
+    
+    h1 {
+        font-size: 3rem !important;
+    }
+    
+    h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    .error-actions {
+        flex-direction: column !important;
+        align-items: center;
+    }
+}
+</style>
+{% endblock %}
