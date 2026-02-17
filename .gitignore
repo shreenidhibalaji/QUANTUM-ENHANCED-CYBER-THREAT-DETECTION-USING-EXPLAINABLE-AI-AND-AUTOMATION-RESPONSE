@@ -8,3 +8,4 @@ uploads/
 database/
 results/
 shap_results/
+.env
